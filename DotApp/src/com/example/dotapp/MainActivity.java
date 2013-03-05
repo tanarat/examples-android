@@ -6,6 +6,10 @@ import com.example.dotapp.Dots.DotsChangeListener;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -29,6 +33,7 @@ public class MainActivity extends Activity implements DotsChangeListener {
 	private ListView lvDots;
 	private DotListAdapter dotListAdapter;
 	private Random randomObj = new Random();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,11 +48,11 @@ public class MainActivity extends Activity implements DotsChangeListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.main, menu);
+		// getMenuInflater().inflate(R.menu.main, menu);
 		menu.add(Menu.NONE, MENU_CLEAR, Menu.NONE, R.string.menuClear);
 		return true;
 	}
-	
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
@@ -57,19 +62,18 @@ public class MainActivity extends Activity implements DotsChangeListener {
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 
-	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		
-		
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+
 		switch (item.getItemId()) {
 		case MENU_DELETE:
-			mDots.deleteDot(info.position);
+			deleteDot(info.position);
 			break;
 		case MENU_EDIT:
-			
+
 			break;
 		default:
 			break;
@@ -77,7 +81,24 @@ public class MainActivity extends Activity implements DotsChangeListener {
 		return super.onContextItemSelected(item);
 	}
 
-	public void random(View view){
+	private void deleteDot(final int position) {
+		new AlertDialog.Builder(this).setTitle(R.string.confirm_delete_title)
+				.setMessage(R.string.confirm_delete_message)
+				.setPositiveButton(R.string.button_yes, new OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						mDots.deleteDot(position);
+					}
+				}).setNegativeButton(R.string.button_no, new OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						//do nothing
+					}
+				}).show();
+	}
+
+	public void random(View view) {
 		int x = randomObj.nextInt(MAX_X);
 		int y = randomObj.nextInt(MAX_Y);
 		Dot dot = new Dot(x, y);
@@ -95,7 +116,7 @@ public class MainActivity extends Activity implements DotsChangeListener {
 		return true;
 	}
 
-	private class DotListAdapter extends BaseAdapter implements ListAdapter{
+	private class DotListAdapter extends BaseAdapter implements ListAdapter {
 
 		@Override
 		public int getCount() {
@@ -119,29 +140,30 @@ public class MainActivity extends Activity implements DotsChangeListener {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
 			ViewHolder viewHolder;
-			if(convertView == null){
+			if (convertView == null) {
 				// create a new row
 				viewHolder = new ViewHolder();
-				convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dot_row, null);
+				convertView = LayoutInflater.from(getApplicationContext())
+						.inflate(R.layout.dot_row, null);
 				viewHolder.txtX = (TextView) convertView.findViewById(R.id.tvX);
 				viewHolder.txtY = (TextView) convertView.findViewById(R.id.tvY);
 				convertView.setTag(viewHolder);
-			}else{
-				// reuse 
+			} else {
+				// reuse
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			//update view
+			// update view
 			Dot dot = (Dot) getItem(position);
 			viewHolder.txtX.setText(String.valueOf(dot.getX()));
 			viewHolder.txtY.setText(String.valueOf(dot.getY()));
 			return convertView;
 		}
-		
-		private final class ViewHolder{
+
+		private final class ViewHolder {
 			TextView txtX;
 			TextView txtY;
 		}
-		
+
 	}
 
 	@Override
