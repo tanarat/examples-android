@@ -2,14 +2,11 @@ package com.example.dotapp;
 
 import java.util.Random;
 
-import com.example.dotapp.Dots.DotsChangeListener;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -19,9 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.dotapp.Dots.DotsChangeListener;
 
 public class MainActivity extends Activity implements DotsChangeListener {
 	private static final int MAX_Y = 100;
@@ -73,14 +73,38 @@ public class MainActivity extends Activity implements DotsChangeListener {
 			deleteDot(info.position);
 			break;
 		case MENU_EDIT:
-
+			editDot(info.position);
 			break;
 		default:
 			break;
 		}
 		return super.onContextItemSelected(item);
 	}
+	private void editDot(final int position){
+		Dot dot = mDots.getDot(position);
+		View view = getLayoutInflater().inflate(R.layout.edit_dot, null);
+		final EditText edtX = (EditText) view.findViewById(R.id.edtX);
+		final EditText edtY = (EditText) view.findViewById(R.id.edtY);
+		edtX.setText(String.valueOf(dot.getX()));
+		edtY.setText(String.valueOf(dot.getY()));
+		
+		new AlertDialog.Builder(this).setView(view)
+		.setMessage(R.string.confirm_delete_message)
+		.setPositiveButton(R.string.button_yes, new OnClickListener() {
 
+			public void onClick(DialogInterface dialog, int which) {
+				int x = Integer.parseInt(edtX.getText().toString());
+				int y = Integer.parseInt(edtY.getText().toString());
+				mDots.editDot(position, x, y);
+			}
+		}).setNegativeButton(R.string.button_no, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				//do nothing
+			}
+		}).show();
+	}
 	private void deleteDot(final int position) {
 		new AlertDialog.Builder(this).setTitle(R.string.confirm_delete_title)
 				.setMessage(R.string.confirm_delete_message)

@@ -12,5 +12,7 @@
     <string name="confirm_delete_message">Delete?</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
+    <string name="coordinateX">X : </string>
+    <string name="coordinateY">Y : </string>
 
 </resources>

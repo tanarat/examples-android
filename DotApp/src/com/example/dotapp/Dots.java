@@ -39,4 +39,10 @@ public class Dots {
 		dots.remove(position);
 		notifyDotsChanged();
 	}
+	public void editDot(int position, int x, int y) {
+		Dot d = dots.get(position);
+		d.setX(x);
+		d.setY(y);
+		notifyDotsChanged();
+	}
 }
