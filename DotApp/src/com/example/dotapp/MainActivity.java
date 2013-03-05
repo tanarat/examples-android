@@ -25,17 +25,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.dotapp.Dots.DotsChangeListener;
+import com.example.dotapp.DotsView.DotsViewDataSource;
 
 public class MainActivity extends Activity implements DotsChangeListener, OnItemClickListener {
 	public static final String COORDINATE_Y = "y";
 	public static final String COORDINATE_X = "x";
-	private static final int MAX_Y = 100;
-	private static final int MAX_X = 100;
+	private static final int MAX_Y = 500;
+	private static final int MAX_X = 500;
 	private static final int MENU_CLEAR = 1000;
 	private static final int MENU_DELETE = 1001;
 	private static final int MENU_EDIT = 1002;
 	private Dots mDots = new Dots();
 	private ListView lvDots;
+	private DotsView dotView;
 	private DotListAdapter dotListAdapter;
 	private Random randomObj = new Random();
 
@@ -45,6 +47,19 @@ public class MainActivity extends Activity implements DotsChangeListener, OnItem
 		setContentView(R.layout.activity_main);
 		mDots.setDotsChangeListener(this);
 		lvDots = (ListView) findViewById(R.id.lvDots);
+		dotView = (DotsView) findViewById(R.id.dotsView);
+		dotView.setDotsViewDataSource(new DotsViewDataSource() {
+			
+			public Dot getItem(int position) {
+				// TODO Auto-generated method stub
+				return mDots.getDot(position);
+			}
+			
+			public int getCount() {
+				// TODO Auto-generated method stub
+				return mDots.count();
+			}
+		});
 		dotListAdapter = new DotListAdapter();
 		lvDots.setAdapter(dotListAdapter);
 		lvDots.setOnItemClickListener(this);

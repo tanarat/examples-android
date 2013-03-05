@@ -18,6 +18,12 @@
         android:transcriptMode="alwaysScroll">
     </ListView>
 
+    <com.example.dotapp.DotsView
+        android:id="@+id/dotsView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp" 
+        android:layout_weight="1"/>
+
     <Button
         android:id="@+id/btnRandom"
         android:layout_width="wrap_content"
