@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -14,7 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -23,7 +26,9 @@ import android.widget.TextView;
 
 import com.example.dotapp.Dots.DotsChangeListener;
 
-public class MainActivity extends Activity implements DotsChangeListener {
+public class MainActivity extends Activity implements DotsChangeListener, OnItemClickListener {
+	public static final String COORDINATE_Y = "y";
+	public static final String COORDINATE_X = "x";
 	private static final int MAX_Y = 100;
 	private static final int MAX_X = 100;
 	private static final int MENU_CLEAR = 1000;
@@ -42,6 +47,7 @@ public class MainActivity extends Activity implements DotsChangeListener {
 		lvDots = (ListView) findViewById(R.id.lvDots);
 		dotListAdapter = new DotListAdapter();
 		lvDots.setAdapter(dotListAdapter);
+		lvDots.setOnItemClickListener(this);
 		registerForContextMenu(lvDots);
 	}
 
@@ -194,5 +200,14 @@ public class MainActivity extends Activity implements DotsChangeListener {
 	public void onDotsChange(Dots dots) {
 		// TODO Auto-generated method stub
 		dotListAdapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+		Dot dot = mDots.getDot(position);
+		Intent intent = new Intent(this, DotDetailActivity.class);
+		intent.putExtra(COORDINATE_X, dot.getX());
+		intent.putExtra(COORDINATE_Y, dot.getY());
+		startActivity(intent);
 	}
 }
