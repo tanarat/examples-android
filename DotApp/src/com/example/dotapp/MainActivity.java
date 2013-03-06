@@ -35,7 +35,7 @@ public class MainActivity extends Activity implements DotsChangeListener, OnItem
 	private static final int MENU_CLEAR = 1000;
 	private static final int MENU_DELETE = 1001;
 	private static final int MENU_EDIT = 1002;
-	private Dots mDots = new Dots();
+	private Dots mDots;
 	private ListView lvDots;
 	private DotsView dotView;
 	private DotListAdapter dotListAdapter;
@@ -45,6 +45,7 @@ public class MainActivity extends Activity implements DotsChangeListener, OnItem
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		mDots = new Dots(this);
 		mDots.setDotsChangeListener(this);
 		lvDots = (ListView) findViewById(R.id.lvDots);
 		dotView = (DotsView) findViewById(R.id.dotsView);
